@@ -1,0 +1,75 @@
+{
+  "name": "sla_work_time",
+  "author": "sawrozpdl",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/sawrozpdl/sla_work_time",
+  "bugs": "https://github.com/sawrozpdl/sla_work_time/issues",
+  "homepage": "https://sawrozpdl.github.io/sla_work_time",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "module": "dist/sla_work_time.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/sla_work_time.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/sla_work_time.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "dependencies": {
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@types/moment": "^2.13.0",
+    "@size-limit/preset-small-lib": "^8.1.0",
+    "husky": "^8.0.2",
+    "size-limit": "^8.1.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
+  },
+  "peerDependencies": {
+    "moment": "^2.29.4"
+  },
+  "keywords": [
+    "sla",
+    "work",
+    "time",
+    "deadline",
+    "minutes",
+    "addition",
+    "hours",
+    "moment",
+    "date"
+  ]
+}
