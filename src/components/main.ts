@@ -1,6 +1,6 @@
 import {
   log,
-  viewDate,
+  formatDate,
   isAfterEndPM,
   countWeekends,
   normalizeDate,
@@ -46,7 +46,7 @@ export const validateSkipDay = (date: DateTime, initial = true): DateTime => {
         .minute(pc.START_AM_MIN)
         .second(0);
     }
-    log('Holiday detected, validate jumped to: ', viewDate(validated));
+    log('Holiday detected, validate jumped to: ', formatDate(validated));
   }
 
   return changed ? toNextWorkTime(validated, false) : validated;
@@ -75,14 +75,14 @@ export const toNextWorkTime = (date: DateTime, initial = true) => {
         .second(0);
     }
 
-    log('Weekends detected, validate jumped to : ', viewDate(startDate));
+    log('Weekends detected, validate jumped to : ', formatDate(startDate));
   } else if (initial && isBeforeStartAM(startDate)) {
     changed = true;
     startDate = startDate
       .hour(pc.START_AM_HR)
       .minute(pc.START_AM_MIN)
       .second(0);
-    log('Before start AM, jumped to : ', viewDate(startDate));
+    log('Before start AM, jumped to : ', formatDate(startDate));
   } else if (initial && isAfterEndPM(startDate)) {
     changed = true;
     startDate = startDate
@@ -91,7 +91,7 @@ export const toNextWorkTime = (date: DateTime, initial = true) => {
       .minute(pc.START_AM_MIN)
       .second(0);
 
-    log('After end PM, jumped to : ', viewDate(startDate));
+    log('After end PM, jumped to : ', formatDate(startDate));
   }
 
   return initial || changed ? validateSkipDay(startDate, initial) : startDate;
@@ -140,14 +140,18 @@ const addHolidayOffset = (
         'days'
       );
       changed = true;
-      log('Holiday range in bound, jumped to: ', viewDate(validated), `(${i})`);
+      log(
+        'Holiday range in bound, jumped to: ',
+        formatDate(validated),
+        `(${i})`
+      );
     } else if (
       // initialDate can't be a skipDay but finalDate could be
       skipDay.startDate.isBetween(initialDate, finalDate, undefined, '(]')
     ) {
       validated = finalDate.add(1, 'days');
       changed = true;
-      log('1 holiday in between, jumped to: ', viewDate(validated));
+      log('1 holiday in between, jumped to: ', formatDate(validated));
     }
   }
 
@@ -176,7 +180,7 @@ export const addMinutes = (
 
   let startDate = normalizeDate(date);
 
-  log(`Adding ${minutes} minutes`, 'to: ', viewDate(startDate));
+  log(`Adding ${minutes} minutes`, 'to: ', formatDate(startDate));
 
   if (!workHours) {
     const final = startDate.add(minutes, 'minutes');
@@ -195,7 +199,7 @@ export const addMinutes = (
     startDate = startDate.add(workWeekCount, 'weeks');
 
     log(
-      `Jumped ${workWeekCount} weeks to: ` + viewDate(startDate),
+      `Jumped ${workWeekCount} weeks to: ` + formatDate(startDate),
       `(Remaining : ${remainingWeekMinuteToAdd} minutes)`
     );
   }
@@ -214,7 +218,7 @@ export const addMinutes = (
     startDate = startDate.add(workDayCount + weekendOffset, 'days');
 
     log(
-      `Jumped ${workDayCount} days to: ` + viewDate(startDate),
+      `Jumped ${workDayCount} days to: ` + formatDate(startDate),
       `(Remaining : ${remainingDayMinutesToAdd} minutes)`
     );
   }
@@ -237,14 +241,14 @@ export const addMinutes = (
       )
       .second(0);
 
-    log(`Jumped to next working day to: ` + viewDate(startDate));
+    log(`Jumped to next working day to: ` + formatDate(startDate));
   } else {
     startDate = startDate.add(remainingDayMinutesToAdd, 'minutes');
   }
 
   log(
     'Semi final: ',
-    viewDate(startDate),
+    formatDate(startDate),
     ', Now considering holidays (If any in bound)'
   );
 
@@ -252,7 +256,7 @@ export const addMinutes = (
     ? addHolidayOffset(givenDate, startDate)
     : startDate;
 
-  log('Final result: ', viewDate(result));
+  log('Final result: ', formatDate(result));
 
   return toNativeDate ? result.toDate() : result;
 };

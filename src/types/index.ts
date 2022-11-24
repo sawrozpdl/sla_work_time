@@ -22,6 +22,7 @@ export interface SlaWorkTimeConfig {
   startAM?: number;
   endPM?: number;
   log?: boolean;
+  logger?: (...args: any[]) => void;
 }
 
 // Configurable options for time addition.

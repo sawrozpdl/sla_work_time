@@ -65,24 +65,24 @@ describe('Test addMinutes', () => {
     },
   ]);
 
-  it('Validates the day to working day', () => {
+  it('Validates given date to the next working day', () => {
     expect(
-      utils.viewDate(addMinutes('2019-01-01T00:00:00', 0), testFormat)
+      utils.formatDate(addMinutes('2019-01-01T00:00:00', 0), testFormat)
     ).toEqual('2019-01-01T08:30:00');
   });
 
-  it('Add basic minutes to the date, considering weekends and work hours', () => {
+  it('Adds minutes to the date, considering weekends and work hours', () => {
     genericAddTestList.forEach(test => {
       expect(
-        utils.viewDate(addMinutes(test.input, test.minutes), testFormat)
+        utils.formatDate(addMinutes(test.input, test.minutes), testFormat)
       ).toEqual(test.expected);
     });
   });
 
-  it('Add minutes to the date, considering holidays', () => {
+  it('Adds minutes to the date, considering holidays', () => {
     holidayTestList.forEach(test => {
       expect(
-        utils.viewDate(addMinutes(test.input, test.minutes), testFormat)
+        utils.formatDate(addMinutes(test.input, test.minutes), testFormat)
       ).toEqual(test.expected);
     });
   });

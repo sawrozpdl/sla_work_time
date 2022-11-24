@@ -1,9 +1,9 @@
 <h2 align='center'>
- SLA work time [0.0.1] (Beta)
+ SLA work time [0.0.2] (Beta)
 </h2>
 
 <h3 align='center'>
-A time management(addition/validation) integration with momentjs with work hours and skip day considerations.
+A time management(addition/validation) algorithm with work hours and skip day considerations. [powered by momentjs]
 </h3>
 
 ---
@@ -23,11 +23,7 @@ A time management(addition/validation) integration with momentjs with work hours
   </a>
 </p>
 
-## Demo
-
-![demo-gif](https://i.gifer.com/P4id.gif)
-
-[View on gh-pages](https://sawrozpdl.github.io/sla_work_time)
+[View demo](https://sawrozpdl.github.io/sla_work_time)
 
 ## Installation
 
@@ -44,7 +40,7 @@ yarn add sla_work_time
 ## Usage
 
 ```tsx
-import { setSkipDays, addMinutes, configure } from 'sla_work_time';
+import { setSkipDays, addMinutes, configure, utils } from 'sla_work_time';
 
 configure({
   // Setting work hours as 8:30AM to 5:30PM
@@ -69,29 +65,33 @@ setSkipDays([
 
 const newDate = addMinutes('2022-11-28T16:18:44', 3600);
 
-console.log(utils.viewDate(
-    newDate,
-    'YYYY-MM-DDTHH:mm:ss'
-)); // 2022-12-19T13:18:00 
-
+console.log(utils.formatDate(newDate, 'YYYY-MM-DDTHH:mm:ss')); // 2022-12-19T13:18:00
 ```
 
+**<p style="text-align: center;">! NOTE !</p>**
+
+```
+The function `setSkipDays` is supposed to be called periodically (yearly/monthly) to update the skip days(eg. add/update new holidays) which should be handled in the service layer. this can be implemented with either an ETL job or an API that injects holidays into the system memory.
+````
+
+
 ### Available methods
+
 ---
 
-| Method                       | Params                                                 | Description                                                          |
-|------------------------------|--------------------------------------------------------|----------------------------------------------------------------------|
-| addMinutes    \|\| addHours  | (date, minutes \|\| hours, config: DurationAddOptions) | Adds duration to the date following the config options.              |
-| toNextWorkTime               | (date: DateTime, fixTime: Boolean = true)              | Gets the given date back to valid work day and hours if it's not     |
-| validateSkipDay              | (date: DateTime, fixTime: Boolean = true)              | Gets the date out of holiday (if it's in one)                        |
-| configure                    | (config: { startAM, endPM })                           | Sets the work hours for any day.                                     |
-| setSkipDays                  | (skipDays: { startDate, endDate }[])                   | Sets date to exclude from minute additions (For instance: holidays)  |
----
+| Method                   | Params                                                 | Description                                                         |
+| ------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------- |
+| addMinutes \|\| addHours | (date, minutes \|\| hours, config: DurationAddOptions) | Adds duration to the date following the config options.             |
+| toNextWorkTime           | (date: DateTime, fixTime: Boolean = true)              | Gets the given date back to valid work day and hours if it's not    |
+| validateSkipDay          | (date: DateTime, fixTime: Boolean = true)              | Gets the date out of holiday (if it's in one)                       |
+| configure                | (config: { startAM, endPM })                           | Sets the work hours for any day.                                    |
+| setSkipDays              | (skipDays: [{ startDate, endDate }])                   | Sets date to exclude from minute additions (For instance: holidays) |
 
+---
 
 ## Description
 
-These exposed functions add durations to a date considering work hours, week ends and holidays. Like adding 25 minutes to a date @ `Friday 05:55PM` would result in `Monday 09:20AM` for [Mon-Fri] & [9AM - 6PM] work hours.
+These exposed functions add durations to a date considering work hours, week ends and skip days(holidays). For example, adding 25 minutes to the date `Friday 05:55PM` would result in `Monday 09:20AM` for [Mon-Fri] & [9AM - 6PM] work hour settings.
 
 ## Contributing
 

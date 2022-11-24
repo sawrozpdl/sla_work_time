@@ -4,6 +4,10 @@ export const settings = {
   LOG: false,
 };
 
+export const interceptors = {
+  logger: console.log,
+};
+
 // Assuming work days are Monday through Friday and work hours are 8am to 5pm [Client set]
 export const coreConfig = {
   START_AM: 8,

@@ -12,8 +12,7 @@
     "react": "^18.2.0",
     "react-app-polyfill": "^1.0.0",
     "sla_work_time": "^0.0.1",
-    "react-dom": "^18.2.0",
-    "react-loader-spinner": "^5.3.4"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",

@@ -1,15 +1,20 @@
 import moment, { Moment } from 'moment';
-import { settings as s, parsedConfig as pc, WEEK as w } from '../store';
+import {
+  WEEK as w,
+  settings as s,
+  interceptors as i,
+  parsedConfig as pc,
+} from '../store';
 import { DateTime, DateProcessor, InputDate } from '../types';
 
 /**
- * Log wrapper.
+ * Log function wrapper.
  *
  * @param params
  */
 export const log = (...params: any[]) => {
   if (s.LOG) {
-    console.log(...params);
+    i.logger(...params);
   }
 };
 
@@ -41,7 +46,7 @@ export const normalizeDate = (date: InputDate): DateTime => {
  *
  * @returns a formatted date string.
  */
-export const viewDate = (date: InputDate, format = 'MMM Do, h:mm a') => {
+export const formatDate = (date: InputDate, format = 'MMM Do, h:mm a') => {
   return (date instanceof Date || typeof date === 'string'
     ? moment(date)
     : date
