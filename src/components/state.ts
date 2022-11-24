@@ -1,5 +1,6 @@
 import {
   settings as s,
+  interceptors as i,
   coreData as cd,
   coreConfig as cc,
   parsedConfig as pc,
@@ -48,6 +49,10 @@ export const configure = (config: SlaWorkTimeConfig) => {
 
   if (config.log) {
     s.LOG = config.log;
+  }
+
+  if (config.logger) {
+    i.logger = config.logger;
   }
 
   pc.DAILY_WORK_MINS = (cc.END_PM - cc.START_AM) * 60;
