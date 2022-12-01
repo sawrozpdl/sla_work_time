@@ -1,7 +1,7 @@
 {
   "name": "sla_work_time",
   "author": "sawrozpdl",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

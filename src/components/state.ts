@@ -26,7 +26,7 @@ export const setSkipDays = (skipDays: DateRange[] = []) => {
     })
     .sort((a, b) => a.startDate.valueOf() - b.startDate.valueOf());
 
-  log('Skip days set to: ', cd.SKIP_DAYS);
+  log('Skip days loaded: ', cd.SKIP_DAYS);
 };
 
 /**

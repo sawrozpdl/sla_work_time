@@ -1,0 +1,194 @@
+.container {
+  display: flex;
+  margin: 4% 8%;
+  justify-content: space-around;
+}
+
+.input {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  padding-right: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type='text'],
+input[type='number'],
+.time,
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 40px;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+
+input[type='text'] {
+  color: darkcyan;
+}
+
+input[type='number'] {
+  color: crimson;
+}
+
+.time {
+  color: darkviolet;
+  width: 170px;
+}
+
+.calendar {
+  margin-top: 12px;
+  padding-right: 8px;
+}
+
+.button {
+  background-color: #0074d9;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.button:hover {
+  background-color: #0088ff;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 0;
+  font-size: 13px;
+  color: red;
+}
+
+.time__field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.logs {
+  width: 40%;
+  border: 1px solid #cfd8e2;
+  padding: 0 10px;
+  box-shadow: 0 0 5px #8798ad;
+}
+
+.middle {
+  font-size: 24px;
+  color: darkviolet;
+}
+
+.logs__list {
+  display: list-item;
+  list-style-type: '►';
+  padding-inline-start: 1ch;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.output_label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.output {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.add-symbol-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-symbol {
+  font-size: 32px;
+}
+
+.log_title {
+  text-align: center;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted grey;
+  font-size: 18px;
+  color: darkblue;
+  letter-spacing: 0.6px;
+}
+
+.log__list_container {
+  padding: 0px 32px;
+  max-height: 340px;
+  overflow-y: auto;
+  color: royalblue;
+}
+
+.log_fallback {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.result {
+  margin-top: 20px;
+  text-align: center;
+  color: cornflowerblue;
+}
+
+.button_container {
+  margin-top: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CUSTOM INP */
+
+.min_inp {
+  display: inline-block;
+  position: relative;
+  width: 50%;
+  align-self: center;
+}
+
+.min_inp::after {
+  position: absolute;
+  top: 16px;
+  font-size: 18px;
+  right: 1.5em;
+  transition: all 0.05s ease-in-out;
+  color: crimson;
+}
+
+.min_inp:hover::after,
+div:focus-within::after,
+.min_inp:focus::after {
+  right: 2.5em;
+}
+
+@supports (-moz-appearance: none) {
+  .min_inp::after {
+    right: 1.5em;
+  }
+}
+
+.min_inp::after {
+  content: 'minutes';
+}

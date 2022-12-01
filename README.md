@@ -1,5 +1,5 @@
 <h2 align='center'>
- SLA work time [0.0.2] (Beta)
+ SLA work time [0.0.3] (Beta)
 </h2>
 
 <h3 align='center'>
