@@ -11,8 +11,9 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-app-polyfill": "^1.0.0",
-    "sla_work_time": "^0.0.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-multi-date-picker": "^3.3.4",
+    "sla_work_time": "^0.0.2"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",
