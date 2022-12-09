@@ -40,24 +40,46 @@ jobs:
 
     needs: build
 
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      
+
+      - name: Set NPM_TOKEN
+        run: npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+
+      - name: Set package version to ENV
+        run: | 
+          PV=$(cat package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[",]//g')
+          NLV=$(npm view sla_work_time version)
+          echo "PACKAGE_VERSION=$PV" >> $GITHUB_ENV
+          echo "NPM_LATEST_VERSION=$NLV" >> $GITHUB_ENV
       - name: Install
-        run: yarn install
+        run: |
+          if [  ${{ env.PACKAGE_VERSION }} !=  ${{ env.NPM_LATEST_VERSION }} ]; then
+            yarn install 
+          else
+            echo "No new deployments, skipping install"
+          fi
 
       - name: Publish
         run: |
-          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
-          npm publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          if [  ${{ env.PACKAGE_VERSION }} !=  ${{ env.NPM_LATEST_VERSION }} ]; then
+            npm publish 
+          else
+            echo "No new deployments, skipping deploy"
+          fi
 
-  deploy_example:
+  deploy_demo_ui:
     defaults:
       run:
         working-directory: demo

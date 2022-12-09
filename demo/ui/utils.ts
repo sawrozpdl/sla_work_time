@@ -1,7 +1,5 @@
-export const parseTime = (time: string) => {
-  const first = parseInt(time.split(':')[0]);
-  const second = (+parseInt(time.split(':')[1]) / 60) * 100;
-  const output = parseInt(`${first}.${second}`);
+export const parseTime = (time: string): number => {
+  const [hr, min] = time.split(':');
 
-  return output;
+  return +hr + +(+min / 60).toFixed(2);
 };

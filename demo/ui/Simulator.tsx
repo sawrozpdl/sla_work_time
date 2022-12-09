@@ -20,13 +20,11 @@ const HolidayCalendar = () => {
     min: 0,
   });
 
-  const endPM = parseTime(value.end);
   const startAM = parseTime(value.start);
+  const endPM = parseTime(value.end);
 
   React.useEffect(() => {
     configure({
-      startAM,
-      endPM,
       log: true,
       displayFormat: 'ddd MMM Do, h:mm a',
       logger: (...params) => {
@@ -63,11 +61,15 @@ const HolidayCalendar = () => {
       return;
     }
 
-    setErrors({ start: '' });
+    configure({
+      startAM,
+      endPM,
+    })
     setSkipDays(parsedHolidays);
-
+    
     const newDate = addMinutes(startDate.toString(), value.min) || null;
-
+    
+    setErrors({ start: '' });
     setFinalValue(utils.formatDate(newDate, 'dddd MMM Do YYYY, h:mm a'));
   };
 
