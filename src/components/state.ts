@@ -5,32 +5,51 @@ import {
   coreConfig as cc,
   parsedConfig as pc,
 } from '../store';
-import { DateRange, SlaWorkTimeConfig } from '../types';
-import { countDays, log, normalizeDate } from '../utils';
+import { DateRange, InputDate, SlaWorkTimeConfig } from '../types';
+import { countDays, log, normalizeDate, toDateRange } from '../utils';
 
 /**
  * Sets date to exclude from minute additions (For instance: holidays)
  *
  * @param skipDays - Array of dates to exclude from minute additions
+ * @param shouldSort - Should the skip days be sorted by startDate
  */
-export const setSkipDays = (skipDays: DateRange[] = []) => {
-  cd.SKIP_DAYS = skipDays
-    .map(skipDay => {
-      const mStart = normalizeDate(skipDay.startDate);
-      const mEnd = skipDay.endDate ? normalizeDate(skipDay.endDate) : undefined;
-      return {
-        startDate: mStart,
-        endDate: mEnd,
-        count: mEnd ? countDays(mStart, mEnd) : 1,
-      };
-    })
-    .sort((a, b) => a.startDate.valueOf() - b.startDate.valueOf());
+export const setSkipDays = (
+  skipDays: DateRange[] | InputDate[] = [],
+  shouldSort = true
+) => {
+  const ranged = typeof skipDays[0] === 'object' && 'startDate' in skipDays[0];
 
-  log('Skip days loaded: ', cd.SKIP_DAYS);
+  const _skipDays = ranged ? skipDays : toDateRange(skipDays as InputDate[]);
+
+  let totalCount = 0;
+  let processedSkipDays = (_skipDays as DateRange[]).map(skipDay => {
+    const startDate = normalizeDate(skipDay.startDate);
+    const endDate = skipDay.endDate
+      ? normalizeDate(skipDay.endDate)
+      : undefined;
+    const count = endDate ? countDays(startDate, endDate) : 1;
+    totalCount += count;
+
+    return {
+      startDate,
+      endDate,
+      count,
+    };
+  });
+
+  if (ranged && shouldSort)
+    processedSkipDays = processedSkipDays.sort(
+      (a, b) => a.startDate.valueOf() - b.startDate.valueOf()
+    );
+
+  cd.SKIP_DAYS = processedSkipDays;
+
+  log(`Loaded ${totalCount} skip days into the memory`);
 };
 
 /**
- * Configure the work hours and logs.
+ * Configure the work hours and generic settings.
  *
  * @param config - SlaWorkTimeConfig
  */
@@ -55,6 +74,12 @@ export const configure = (config: SlaWorkTimeConfig) => {
     i.logger = config.logger;
   }
 
-  pc.DAILY_WORK_MINS = (cc.END_PM - cc.START_AM) * 60;
-  pc.WEEKLY_WORK_MINS = pc.DAILY_WORK_MINS * 5;
+  if (config.displayFormat) {
+    s.DISPLAY_FORMAT = config.displayFormat;
+  }
+
+  if (config.startAM || config.endPM) {
+    pc.DAILY_WORK_MINS = (cc.END_PM - cc.START_AM) * 60;
+    pc.WEEKLY_WORK_MINS = pc.DAILY_WORK_MINS * 5;
+  }
 };

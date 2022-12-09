@@ -34,7 +34,9 @@ export const normalizeDate = (date: InputDate): DateTime => {
   ) {
     return moment(date);
   } else {
-    throw new Error('Invalid date type, must be a Moment, Date, or string');
+    throw new Error(
+      'Invalid date type, must be either of [Moment, Date, string]'
+    );
   }
 };
 
@@ -46,7 +48,7 @@ export const normalizeDate = (date: InputDate): DateTime => {
  *
  * @returns a formatted date string.
  */
-export const formatDate = (date: InputDate, format = 'MMM Do, h:mm a') => {
+export const formatDate = (date: InputDate, format = s.DISPLAY_FORMAT) => {
   return (date instanceof Date || typeof date === 'string'
     ? moment(date)
     : date
@@ -117,5 +119,84 @@ export const countDays = (
 export const countWeekends = (startDate: DateTime, endDate: DateTime) => {
   return countDays(startDate, endDate, date =>
     [w.SAT, w.SUN].includes(date.day())
+  );
+};
+
+/**
+ * Removes duplicate items from an array of objects.
+ *
+ * @param items Array of items to clean.
+ * @param getUniqueKey Function to generate a unique key for each item.
+ *
+ * @returns List of unique items
+ */
+export const removeDuplicates = <T>(
+  items: T[],
+  getUniqueKey: (v: T) => string
+) => {
+  const existMap = new Map<string, boolean>();
+
+  const newItems = [];
+
+  for (const item of items) {
+    const key = getUniqueKey(item);
+    if (!existMap.has(key)) {
+      existMap.set(key, false);
+      newItems.push(item);
+    }
+  }
+
+  return newItems;
+};
+
+/**
+ * Converts a given array of dates to a date range.
+ *
+ * @param dates raw array of dates.
+ * @param preSort  Wether to sort the dates.
+ * @param removeDuplicate Wether to remove duplicate dates.
+ */
+export const toDateRange = (
+  dates: InputDate[],
+  preSort = true,
+  removeDuplicate = true
+) => {
+  if (!dates.length) return [];
+
+  let nDates = dates.map(normalizeDate);
+
+  if (removeDuplicate) {
+    nDates = removeDuplicates(nDates, d => d.format('YYYY-MM-DD'));
+  }
+
+  if (preSort) {
+    nDates = nDates.sort((a, b) => a.diff(b));
+  }
+
+  const dateRanges = [];
+
+  let startDate = nDates[0];
+  let endDate = nDates[0];
+
+  for (let i = 1; i < nDates.length; i++) {
+    const d = nDates[i];
+
+    if (d.diff(endDate, 'day') === 1) {
+      endDate = d;
+    } else {
+      dateRanges.push({ startDate, endDate });
+      startDate = d;
+      endDate = d;
+    }
+  }
+
+  dateRanges.push({ startDate, endDate });
+
+  return dateRanges.map(range =>
+    range.startDate.isSame(range.endDate, 'day')
+      ? {
+          startDate: range.startDate,
+        }
+      : range
   );
 };

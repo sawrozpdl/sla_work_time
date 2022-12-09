@@ -1,9 +1,9 @@
 <h2 align='center'>
- SLA work time [0.0.3] (Beta)
+ SLA work time [0.0.4]
 </h2>
 
 <h3 align='center'>
-A time management(addition/validation) algorithm with work hours and skip day considerations. [powered by momentjs]
+A duration addition/validation algorithm with work hours and skip days(holidays) consideration. [featuring momentjs]
 </h3>
 
 ---
@@ -63,17 +63,20 @@ setSkipDays([
   },
 ]);
 
+// Supports Date[] format (does internal duplicate removal->sorting->parsing this way)
+// setSkipDays(['2022-12-01', '2022-12-02', '2022-12-03', '2022-12-05'])
+
 const newDate = addMinutes('2022-11-28T16:18:44', 3600);
 
 console.log(utils.formatDate(newDate, 'YYYY-MM-DDTHH:mm:ss')); // 2022-12-19T13:18:00
 ```
+<br/>
 
-**<p style="text-align: center;">! NOTE !</p>**
+**<h3 align='center'>! NOTE !</h3>**
 
-```
-The function `setSkipDays` is supposed to be called periodically (yearly/monthly) to update the skip days(eg. add/update new holidays) which should be handled in the service layer. this can be implemented with either an ETL job or an API that injects holidays into the system memory.
-````
+To keep the system's list of holidays up-to-date, the setSkipDays function should be periodically called to update the in-memory list. This can be done either through an ETL job or periodic API calls to inject updated holiday information into the system. The service layer of the system is responsible for handling these updates.
 
+<br/>
 
 ### Available methods
 
@@ -85,7 +88,7 @@ The function `setSkipDays` is supposed to be called periodically (yearly/monthly
 | toNextWorkTime           | (date: DateTime, fixTime: Boolean = true)              | Gets the given date back to valid work day and hours if it's not    |
 | validateSkipDay          | (date: DateTime, fixTime: Boolean = true)              | Gets the date out of holiday (if it's in one)                       |
 | configure                | (config: { startAM, endPM })                           | Sets the work hours for any day.                                    |
-| setSkipDays              | (skipDays: [{ startDate, endDate }])                   | Sets date to exclude from minute additions (For instance: holidays) |
+| setSkipDays              | (skipDays: [{ startDate, endDate }] \|\| Date[])                   | Sets date to exclude from minute additions (For instance, holidays) |
 
 ---
 
@@ -97,7 +100,7 @@ These exposed functions add durations to a date considering work hours, week end
 
 ---
 
-Fee free to open a pull request with detailed title/description about the feature.
+Fee free to open a pull request with detailed title and description about the feature.
 
 For reporting any bug/issues make sure to add a detailed bug reproduction process(a sandbox link if possible) in the description.
 

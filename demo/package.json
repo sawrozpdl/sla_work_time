@@ -13,7 +13,7 @@
     "react-app-polyfill": "^1.0.0",
     "react-dom": "^18.2.0",
     "react-multi-date-picker": "^3.3.4",
-    "sla_work_time": "^0.0.3"
+    "sla_work_time": "^0.0.4"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",

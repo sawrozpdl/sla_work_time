@@ -246,7 +246,7 @@ export const addMinutes = (
     startDate = startDate.add(remainingDayMinutesToAdd, 'minutes');
   }
 
-  log('Semi final: ', formatDate(startDate), ', Considering holidays now...');
+  log('Pre holiday consideration result: ', formatDate(startDate));
 
   const result = holidayOffset
     ? addHolidayOffset(givenDate, startDate)

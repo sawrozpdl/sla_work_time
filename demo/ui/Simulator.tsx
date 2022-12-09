@@ -3,15 +3,15 @@ import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 import TimePicker from 'react-multi-date-picker/plugins/time_picker';
 import DatePicker, { Calendar, DateObject } from 'react-multi-date-picker';
 
-import { normalizeString, timeToNumber } from './utils';
+import { parseTime } from './utils';
 import { setSkipDays, addMinutes, configure, utils } from 'sla_work_time';
 
 const HolidayCalendar = () => {
   const [errors, setErrors] = React.useState({ start: '' });
   const [logs, setLogs] = React.useState<string[]>([]);
-  const [date, setDate] = React.useState<DateObject | DateObject[] | null>(
-    null
-  );
+  const [holidays, setHolidays] = React.useState<
+    DateObject | DateObject[] | null
+  >(null);
   const [finalValue, setFinalValue] = React.useState('');
   const [startDate, setStartDate] = React.useState(new Date());
   const [value, setValue] = React.useState({
@@ -20,28 +20,25 @@ const HolidayCalendar = () => {
     min: 0,
   });
 
-  const endPM = timeToNumber(value.end);
-  const startAM = timeToNumber(value.start);
+  const endPM = parseTime(value.end);
+  const startAM = parseTime(value.start);
 
   React.useEffect(() => {
     configure({
       startAM,
       endPM,
       log: true,
+      displayFormat: 'ddd MMM Do, h:mm a',
       logger: (...params) => {
-        const string = normalizeString(params).join(' ');
+        const string = params.join(' ');
         setLogs(prev => [...prev, string]);
       },
     });
   }, []);
 
-  const dateLogs =
-    date && 'length' in date
-      ? date.map((date: DateObject) => {
-          return {
-            startDate: date.toString(),
-          };
-        })
+  const parsedHolidays =
+    holidays && 'length' in holidays
+      ? holidays.map((date: DateObject) => date.toString())
       : [];
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,11 +64,11 @@ const HolidayCalendar = () => {
     }
 
     setErrors({ start: '' });
-    setSkipDays(dateLogs);
+    setSkipDays(parsedHolidays);
 
     const newDate = addMinutes(startDate.toString(), value.min) || null;
 
-    setFinalValue(utils.formatDate(newDate, 'YYYY-MM-DD hh:mm:ss a'));
+    setFinalValue(utils.formatDate(newDate, 'dddd MMM Do YYYY, h:mm a'));
   };
 
   return (
@@ -105,9 +102,9 @@ const HolidayCalendar = () => {
         <Calendar
           className="calendar"
           multiple
-          value={date}
+          value={holidays}
           sort
-          onChange={date => setDate(date)}
+          onChange={date => setHolidays(date)}
           format="YYYY-MM-DD"
           plugins={[<DatePanel />]}
         />

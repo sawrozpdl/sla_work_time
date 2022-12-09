@@ -2,6 +2,7 @@ import { ProcessedDateRange } from '../types';
 
 export const settings = {
   LOG: false,
+  DISPLAY_FORMAT: 'MMM Do, h:mm a',
 };
 
 export const interceptors = {
