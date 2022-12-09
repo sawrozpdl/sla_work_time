@@ -4995,10 +4995,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sla_work_time@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/sla_work_time/-/sla_work_time-0.0.1.tgz#014d553ad80c82176b41933dff8bb603dd0a6712"
-  integrity sha512-Pk0gc4OQM9K4kVgkwUF+NPlknb3tnKhChSfLklh+ZPstozqTOph9QLlo6JntwVFPyfXnfu98DDMbh9jt6mksiQ==
+sla_work_time@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/sla_work_time/-/sla_work_time-0.0.3.tgz#46e9b13da92b751b5e9d1f27d986471cc7c9e1dc"
+  integrity sha512-CTO9aaIg0NogW/MwGGOnGeo2Rvzfpqm0TYM1QZu8yrVPrC5YquOiXrzu25OajkfOvYpU8hpFe+iUHKfqG/yQjw==
   dependencies:
     moment "^2.29.4"
 

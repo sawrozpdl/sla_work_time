@@ -6,8 +6,8 @@ export type DateTime = Moment;
 export type InputDate = string | Date | DateTime;
 
 export interface DateRange {
-  startDate: string | Date | DateTime;
-  endDate?: string | Date | DateTime;
+  startDate: InputDate;
+  endDate?: InputDate;
 }
 
 // Adds a count between the start and end date.
@@ -22,6 +22,7 @@ export interface SlaWorkTimeConfig {
   startAM?: number;
   endPM?: number;
   log?: boolean;
+  displayFormat?: string;
   logger?: (...args: any[]) => void;
 }
 

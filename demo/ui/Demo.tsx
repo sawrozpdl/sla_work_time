@@ -42,8 +42,9 @@ const Demo = () => {
                 'https://raw.githubusercontent.com/npm/logos/master/npm%20square/n-64.png',
               link: 'https://www.npmjs.com/package/sla_work_time',
             },
-          ].map(conf => (
+          ].map((conf, key) => (
             <img
+              key={key}
               width={22}
               height={22}
               title={conf.link}
