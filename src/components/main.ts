@@ -274,3 +274,103 @@ export const addHours = (
   // Got a bit lazy here, but it's alright.
   return addMinutes(date, hours * 60, options);
 };
+
+/**
+ * Checks if a date is a holiday.
+ * 
+ * @param date - The date to check.
+ */
+export const isHoliday = (date: InputDate): boolean => {
+  const normalizedDate = normalizeDate(date);
+
+  for (const skipDay of cd.SKIP_DAYS) {
+    if (
+      skipDay.endDate
+        ? normalizedDate.isBetween(
+            skipDay.startDate,
+            skipDay.endDate,
+            'd',
+            '[]'
+          )
+        : normalizedDate.isSame(skipDay.startDate, 'd')
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
+ * Returns the number of minutes between two dates considering work hours, week ends and holidays.
+ * 
+ * @param fromDate - Beginning date to consider.
+ * @param toDate - Ending date to consider.
+ * @param options - Configurable options.
+ */
+export const figureWorkMinutes = (
+  fromDate: InputDate,
+  toDate: InputDate,
+  options: DurationAddOptions = {}
+): number => {
+  const { workHours = true } = options;
+
+  let startDate = normalizeDate(fromDate);
+  let finalDate = normalizeDate(toDate);
+
+  if (startDate.isSame(finalDate)) {
+    return 0;
+  }
+
+  if (startDate.isAfter(finalDate)) {
+    // Swap the dates
+    [startDate, finalDate] = [finalDate, startDate];
+  }
+
+  if (!workHours) {
+    return finalDate.diff(startDate, 'minutes');
+  }
+
+  startDate = toNextWorkTime(startDate);
+  finalDate = toNextWorkTime(finalDate);
+
+  let minutes = 0;
+
+  // Loop through each days
+  while (startDate.isBefore(finalDate, 'd')) {
+    if (!isHoliday(startDate)) {
+      const workMinutes =
+        (pc.END_PM_HR - startDate.hour()) * 60 +
+        (pc.END_PM_MIN - startDate.minute());
+
+      minutes += workMinutes;
+
+      log(`Figured ${workMinutes} work minutes for: ` + formatDate(startDate));
+    } else {
+      log(`Skipped holiday: ` + formatDate(startDate));
+    }
+
+    // Jump to the next work day
+    startDate = startDate
+      .add(startDate.day() === w.FRI ? 3 : 1, 'days')
+      .hour(pc.START_AM_HR)
+      .minute(pc.START_AM_MIN)
+      .second(0);
+  }
+
+  // Now, we're on the final day/same as end date
+  const finalDayWorkMinutesPassed =
+    (finalDate.hour() - startDate.hour()) * 60 +
+    (finalDate.minute() - startDate.minute());
+
+  if (finalDayWorkMinutesPassed !== 0) {
+    log(
+      `Figured ${finalDayWorkMinutesPassed} work minutes for: ` +
+        formatDate(startDate)
+    );
+  }
+
+  minutes += finalDayWorkMinutesPassed;
+
+  return minutes;
+};
